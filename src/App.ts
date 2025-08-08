@@ -538,17 +538,10 @@ function createBoard() {
     board.appendChild(document.createElement('br'));
     board.appendChild(document.createTextNode(`Score: ${game.score}`));
   } else if (currentMechanic === 'towerbuilder') {
-    board.innerHTML = `<div>Tower Builder</div>`;
-    const btn = document.createElement('button');
-    btn.innerText = 'Add Block';
-    btn.onclick = () => {
-      game.addBlock();
-      createBoard();
-      if (game.isComplete()) alert('Tower complete!');
-    };
-    board.appendChild(btn);
-    board.appendChild(document.createElement('br'));
-    board.appendChild(document.createTextNode(`Height: ${game.height}`));
+    board.innerHTML = '';
+    if (typeof game.render === 'function') {
+      game.render(board);
+    }
   } else if (currentMechanic === 'memorysequence') {
     board.innerHTML = `<div>Memory Sequence: ${game.sequence.join(' - ')}</div>`;
     for (let i = 0; i < 10; i++) {
@@ -949,17 +942,10 @@ function render() {
       board.appendChild(document.createElement('br'));
       board.appendChild(document.createTextNode(`Score: ${game.score}`));
     } else if (currentMechanic === 'towerbuilder') {
-      board.innerHTML = `<div>Tower Builder</div>`;
-      const btn = document.createElement('button');
-      btn.innerText = 'Add Block';
-      btn.onclick = () => {
-        game.addBlock();
-        createBoard();
-        if (game.isComplete()) alert('Tower complete!');
-      };
-      board.appendChild(btn);
-      board.appendChild(document.createElement('br'));
-      board.appendChild(document.createTextNode(`Height: ${game.height}`));
+      board.innerHTML = '';
+      if (typeof game.render === 'function') {
+        game.render(board);
+      }
     } else if (currentMechanic === 'memorysequence') {
       board.innerHTML = `<div>Memory Sequence: ${game.sequence.join(' - ')}</div>`;
       for (let i = 0; i < 10; i++) {
@@ -977,4 +963,10 @@ function render() {
       }
     }
   }
+}
+
+function nextRound() {
+  // Advance to the next round or mechanic
+  // Add your round logic here
+  createBoard();
 }

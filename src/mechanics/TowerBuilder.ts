@@ -1,6 +1,8 @@
 // TowerBuilder.ts
 // Simple Tower Builder mechanic for Kids Game Engine
 
+import { soundManager } from '../soundManager';
+
 // TowerBuilder mechanic: drag and stack colorful blocks to build a tower
 export class TowerBuilder {
   blocks: string[];
