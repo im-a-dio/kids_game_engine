@@ -93,7 +93,7 @@ function createGame(mechanic: string) {
   } else if (mechanic === 'bubblepop') {
     game = new BubblePop();
   } else if (mechanic === 'towerbuilder') {
-    game = new TowerBuilder();
+    game = new TowerBuilder(mechanicLevel);
   } else if (mechanic === 'memorysequence') {
     game = new MemorySequence();
   }
