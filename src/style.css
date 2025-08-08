@@ -23,10 +23,10 @@ a:hover {
 }
 
 body {
+  background: linear-gradient(120deg, #fceabb 0%, #f8b500 100%);
+  font-family: 'Comic Sans MS', 'Arial', sans-serif;
+  color: #333;
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
   min-height: 100vh;
 }
 
@@ -64,15 +64,16 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  background: linear-gradient(90deg, #ffecb3 0%, #ffd54f 100%);
+  border: 2px solid #ffb300;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
+  font-size: 1.3rem;
+  color: #ff6f00;
   cursor: pointer;
-  transition: border-color 0.25s;
+  margin: 6px;
+  padding: 10px 18px;
+  transition: background 0.2s, transform 0.2s;
 }
 button:hover {
   border-color: #646cff;
@@ -80,6 +81,52 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+button:active {
+  background: #ffe082;
+  transform: scale(0.97);
+}
+button:disabled {
+  background: #ffe0b2;
+  color: #aaa;
+  border-color: #ffe0b2;
+  cursor: not-allowed;
+}
+
+#game-board, .game-board {
+  background: #fffde7;
+  border-radius: 24px;
+  box-shadow: 0 6px 32px rgba(255, 193, 7, 0.12);
+  padding: 32px;
+  margin: 40px auto;
+  max-width: 98vw;
+  min-width: 320px;
+  text-align: center;
+}
+
+label, select {
+  font-size: 1.1rem;
+  margin: 0 10px;
+}
+
+.editor-ui {
+  background: #fffde7;
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(255, 193, 7, 0.10);
+  padding: 16px 24px;
+  margin: 20px auto;
+  display: inline-block;
+}
+
+@media (max-width: 600px) {
+  #game-board, .game-board {
+    padding: 10px;
+    min-width: 0;
+  }
+  button {
+    font-size: 1.1rem;
+    padding: 8px 12px;
+  }
 }
 
 @media (prefers-color-scheme: light) {
