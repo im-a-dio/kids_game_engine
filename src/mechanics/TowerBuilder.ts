@@ -56,7 +56,23 @@ export class TowerBuilder {
     const blocksDiv = container.querySelector('#draggable-blocks') as HTMLDivElement;
     this.shuffledBlocks.forEach((block, i) => {
       if (this.tower.includes(block)) return;
-      const blockEl = this.blockElement(block, i === 0 && this.tower.length > 0 ? false : true);
+      const isNext = this.blocks[this.tower.length] === block;
+      const blockEl = this.blockElement(block, isNext);
+      // Double-click to add the correct next block
+      if (isNext) {
+        blockEl.ondblclick = () => {
+          this.tower.push(block);
+          soundManager.play('click');
+          this.render(container);
+          const towerDiv = container.querySelector('#tower-zone') as HTMLDivElement;
+          if (this.tower.length >= this.targetHeight) {
+            soundManager.play('win');
+            towerDiv.innerHTML += `<div style='font-size:24px;color:#43a047;margin-top:8px;'>🎉 Well done! Tower complete!</div>`;
+            towerDiv.style.animation = 'shake 0.5s';
+            setTimeout(() => towerDiv.style.animation = '', 500);
+          }
+        };
+      }
       blocksDiv.appendChild(blockEl);
     });
     // Build zone (your tower)
@@ -75,38 +91,43 @@ export class TowerBuilder {
     // Dedicated drop target for next block
     if (this.tower.length < this.targetHeight) {
       const dropTarget = document.createElement('div');
-      dropTarget.style.width = '44px';
-      dropTarget.style.height = '44px';
-      dropTarget.style.margin = '4px auto';
-      dropTarget.style.border = '3px dashed #1976d2';
+      dropTarget.style.width = '60px';
+      dropTarget.style.height = '60px';
+      dropTarget.style.margin = '8px auto';
+      dropTarget.style.border = '4px solid #1976d2';
       dropTarget.style.background = '#e3f2fd';
-      dropTarget.style.borderRadius = '12px';
+      dropTarget.style.borderRadius = '16px';
       dropTarget.style.display = 'flex';
       dropTarget.style.alignItems = 'center';
       dropTarget.style.justifyContent = 'center';
+      dropTarget.style.fontSize = '18px';
+      dropTarget.style.fontWeight = 'bold';
       dropTarget.innerText = 'Drop here';
+      // Accept drop only for the correct next block
+      dropTarget.ondragover = (e) => e.preventDefault();
+      dropTarget.ondrop = (e) => {
+        const idx = Number(e.dataTransfer?.getData('block-idx'));
+        if (!isNaN(idx) && this.shuffledBlocks[idx] && !this.tower.includes(this.shuffledBlocks[idx]) && this.blocks[this.tower.length] === this.shuffledBlocks[idx]) {
+          this.tower.push(this.shuffledBlocks[idx]);
+          soundManager.play('click');
+          this.render(container);
+          if (this.tower.length >= this.targetHeight) {
+            soundManager.play('win');
+            towerDiv.innerHTML += `<div style='font-size:24px;color:#43a047;margin-top:8px;'>🎉 Well done! Tower complete!</div>`;
+            towerDiv.style.animation = 'shake 0.5s';
+            setTimeout(() => towerDiv.style.animation = '', 500);
+          }
+        } else {
+          soundManager.play('wrong');
+          dropTarget.style.animation = 'shake 0.5s';
+          setTimeout(() => dropTarget.style.animation = '', 500);
+        }
+      };
       towerDiv.appendChild(dropTarget);
     }
-    // Drag/drop logic
-    towerDiv.ondragover = (e) => e.preventDefault();
-    towerDiv.ondrop = (e) => {
-      const idx = Number(e.dataTransfer?.getData('block-idx'));
-      if (!isNaN(idx) && this.shuffledBlocks[idx] && !this.tower.includes(this.shuffledBlocks[idx]) && this.blocks[this.tower.length] === this.shuffledBlocks[idx]) {
-        this.tower.push(this.shuffledBlocks[idx]);
-        soundManager.play('click');
-        this.render(container);
-        if (this.tower.length >= this.targetHeight) {
-          soundManager.play('win');
-          towerDiv.innerHTML += `<div style='font-size:24px;color:#43a047;margin-top:8px;'>🎉 Well done! Tower complete!</div>`;
-          towerDiv.style.animation = 'shake 0.5s';
-          setTimeout(() => towerDiv.style.animation = '', 500);
-        }
-      } else {
-        soundManager.play('wrong');
-        towerDiv.style.animation = 'shake 0.5s';
-        setTimeout(() => towerDiv.style.animation = '', 500);
-      }
-    };
+    // Remove drop logic from towerDiv itself
+    towerDiv.ondragover = null;
+    towerDiv.ondrop = null;
     // Add shake animation CSS
     if (!document.getElementById('tower-shake-style')) {
       const style = document.createElement('style');
